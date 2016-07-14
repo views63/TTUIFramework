@@ -1,27 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
-using TinyTeam.UI;
+using Tiny.UI;
 using UnityEngine.UI;
 
-public class UITopBar : TTUIPage {
-
+public class UITopBar : UIPage
+{
     public UITopBar() : base(UIType.Fixed, UIMode.DoNothing, UICollider.None)
     {
-        uiPath = "UIPrefab/Topbar";
+        UIPath = "UIPrefab/Topbar";
     }
 
-    public override void Awake(GameObject go)
+    protected override void Awake()
     {
-        this.gameObject.transform.Find("btn_back").GetComponent<Button>().onClick.AddListener(() =>
-        {
-            TTUIPage.ClosePage();
-        });
-
-        this.gameObject.transform.Find("btn_notice").GetComponent<Button>().onClick.AddListener(() =>
-        {
-            ShowPage<UINotice>();
-        });
+        CacheTransform.Find("btn_back").GetComponent<Button>().onClick.AddListener(ClosePage);
+        CacheTransform.Find("btn_notice").GetComponent<Button>().onClick.AddListener(ShowPage<UINotice>);
     }
-
-
 }

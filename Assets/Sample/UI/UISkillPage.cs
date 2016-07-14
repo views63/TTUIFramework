@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using TinyTeam.UI;
+using Tiny.UI;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class UISkillPage : TTUIPage {
+public class UISkillPage : UIPage {
 
     GameObject skillList = null;
     GameObject skillDesc = null;
@@ -15,16 +15,16 @@ public class UISkillPage : TTUIPage {
 
     public UISkillPage() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
     {
-        uiPath = "UIPrefab/UISkill";
+        UIPath = "UIPrefab/UISkill";
     }
 
-    public override void Awake(GameObject go)
+    protected override void Awake()
     {
-        skillList = this.transform.Find("list").gameObject;
-        skillDesc = this.transform.Find("desc").gameObject;
+        skillList = this.CacheTransform.Find("list").gameObject;
+        skillDesc = this.CacheTransform.Find("desc").gameObject;
         skillDesc.transform.Find("btn_upgrade").GetComponent<Button>().onClick.AddListener(OnClickUpgrade);
 
-        skillItem = this.transform.Find("list/Viewport/Content/item").gameObject;
+        skillItem = this.CacheTransform.Find("list/Viewport/Content/item").gameObject;
         skillItem.SetActive(false);
     }
 
@@ -33,12 +33,9 @@ public class UISkillPage : TTUIPage {
         //default desc deactive
         skillDesc.SetActive(false);
 
-        skillList.transform.localScale = Vector3.zero;
-        skillList.transform.DOScale(new Vector3(1, 1, 1), 0.5f);
-
         //Get Skill Data.
         //NOTE:here,maybe you havent Show(...pageData),ofcause you can got your skill data from your data singleton
-        UDSkill skillData = this.data != null ? this.data as UDSkill : GameData.Instance.playerSkill;
+        UDSkill skillData = Data != null ? Data as UDSkill : GameData.Instance.playerSkill;
         
         //create skill items in list.
         for(int i=0;i< skillData.skills.Count; i++)
@@ -46,24 +43,26 @@ public class UISkillPage : TTUIPage {
             CreateSkillItem(skillData.skills[i]);
         }
 
+        skillList.transform.localScale = Vector3.zero;
+        skillList.transform.DOScale(Vector3.one, 0.5f).Play();
     }
 
     public override void Hide()
     {
-        for(int i=0; i < skillItems.Count; i++)
+        for (int i = 0; i < skillItems.Count; i++)
         {
-            GameObject.Destroy(skillItems[i].gameObject);
+            Object.Destroy(skillItems[i].gameObject);
         }
         skillItems.Clear();
-
-        this.gameObject.SetActive(false);
+        CacheGameObject.SetActive(false);
+        //Destroy();
     }
 
     #region this page logic
 
     private void CreateSkillItem(UDSkill.Skill skill)
     {
-        GameObject go = GameObject.Instantiate(skillItem) as GameObject;
+        var go = Object.Instantiate(skillItem);
         go.transform.SetParent(skillItem.transform.parent);
         go.transform.localScale = Vector3.one;
         go.SetActive(true);

@@ -20,7 +20,7 @@ public class GameData {
         //NOTE : this is Test Init Here.
         playerSkill = new UDSkill();
         playerSkill.skills = new List<UDSkill.Skill>();
-        for(int i=0; i < 10; i++)
+        for(int i=0; i < 50; i++)
         {
             UDSkill.Skill skill = new UDSkill.Skill();
             skill.name = "skill_" + i;

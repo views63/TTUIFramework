@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using TinyTeam.UI;
+using Tiny.UI;
 using UnityEngine.UI;
 
-public class UIBattle : TTUIPage {
+public class UIBattle : UIPage
+{
 
     public UIBattle() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
     {
-        uiPath = "UIPrefab/UIBattle";
+        UIPath = "UIPrefab/UIBattle";
     }
 
-    public override void Awake(GameObject go)
+    protected override void Awake()
     {
-        this.transform.Find("btn_skill").GetComponent<Button>().onClick.AddListener(OnClickSkillGo);
-        this.transform.Find("btn_battle").GetComponent<Button>().onClick.AddListener(OnClickGoBattle);
+        this.CacheTransform.Find("btn_skill").GetComponent<Button>().onClick.AddListener(OnClickSkillGo);
+        this.CacheTransform.Find("btn_battle").GetComponent<Button>().onClick.AddListener(OnClickGoBattle);
     }
 
     private void OnClickSkillGo()

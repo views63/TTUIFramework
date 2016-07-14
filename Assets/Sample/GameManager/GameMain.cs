@@ -1,19 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using TinyTeam.UI;
+using Tiny.UI;
 
-public class GameMain : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-        TTUIPage.ShowPage<UITopBar>();
-        TTUIPage.ShowPage<UIMainPage>();
+public class GameMain : MonoBehaviour
+{
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        UIPage.ShowPage<UITopBar>();
+        UIPage.ShowPage<UIMainPage>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
-
 }
