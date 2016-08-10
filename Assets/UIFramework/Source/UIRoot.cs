@@ -125,6 +125,7 @@ namespace Tiny.UI
             rect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, 0);
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
+            rect.localScale = Vector3.one;
             can.overrideSorting = true;
             can.sortingOrder = sort;
             go.AddComponent<GraphicRaycaster>();
