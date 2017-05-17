@@ -14,8 +14,8 @@ public class UIBattle : UIPage
 
     protected override void Awake()
     {
-        this.CacheTransform.Find("btn_skill").GetComponent<Button>().onClick.AddListener(OnClickSkillGo);
-        this.CacheTransform.Find("btn_battle").GetComponent<Button>().onClick.AddListener(OnClickGoBattle);
+        Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(OnClickSkillGo);
+        Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(OnClickGoBattle);
     }
 
     private void OnClickSkillGo()

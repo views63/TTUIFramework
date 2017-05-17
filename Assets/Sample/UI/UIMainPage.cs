@@ -13,7 +13,7 @@ public class UIMainPage : UIPage
 
     protected override void Awake()
     {
-        CacheTransform.Find("btn_skill").GetComponent<Button>().onClick.AddListener(ShowPage<UISkillPage>);
-        CacheTransform.Find("btn_battle").GetComponent<Button>().onClick.AddListener(ShowPage<UIBattle>);
+        Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(ShowPage<UISkillPage>);
+        Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(ShowPage<UIBattle>);
     }
 }

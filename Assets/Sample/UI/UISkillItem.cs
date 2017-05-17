@@ -8,7 +8,7 @@ public class UISkillItem : MonoBehaviour {
 
     public void Refresh(UDSkill.Skill skill)
     {
-        this.data = skill;
-        this.transform.Find("title").GetComponent<Text>().text = skill.name + "[lv." + skill.level + "]";
+        data = skill;
+        transform.Find("title").GetComponent<Text>().text = skill.name + "[lv." + skill.level + "]";
     }
 }

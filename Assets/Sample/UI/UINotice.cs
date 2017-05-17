@@ -12,6 +12,6 @@ public class UINotice : UIPage
 
     protected override void Awake()
     {
-        CacheTransform.Find("content/btn_confim").GetComponent<Button>().onClick.AddListener(Hide);
+        Tr.Find("content/btn_confim").GetComponent<Button>().onClick.AddListener(Hide);
     }
 }

@@ -124,11 +124,11 @@
         /// <summary>
         /// this ui's gameobject
         /// </summary>
-        public GameObject CacheGameObject { private set; get; }
+        public GameObject Go { private set; get; }
         /// <summary>
         ///  this ui's transform
         /// </summary>
-        public Transform CacheTransform { private set; get; }
+        public Transform Tr { private set; get; }
 
         /// <summary>
         /// record this ui load mode.async or sync.
@@ -143,8 +143,7 @@
         /// <summary>
         /// refresh page 's data.
         /// </summary>
-        private object _data = null;
-        protected object Data { get { return _data; } }
+        protected object Data { get; private set; }
 
         #region abstract api
 
@@ -167,7 +166,7 @@
         /// </summary>
         public virtual void Active()
         {
-            CacheGameObject.SetActive(true);
+            Go.SetActive(true);
             IsActived = true;
         }
 
@@ -176,18 +175,19 @@
         /// </summary>
         public virtual void Hide()
         {
-            CacheGameObject.SetActive(false);
+            Go.SetActive(false);
             IsActived = false;
             //set this page's data null when hide.
-            _data = null;
+            Data = null;
         }
 
         #endregion
 
-        #region internal api
+        #region public api
 
         public UIPage(UIType type = UIType.Normal, UIMode mod = UIMode.DoNothing, UICollider col = UICollider.None)
         {
+            Data = null;
             Type = type;
             Mode = mod;
             Collider = col;
@@ -205,9 +205,9 @@
         protected void Show()
         {
             //1:instance UI
-            if (CacheGameObject == null && string.IsNullOrEmpty(UIPath) == false)
+            if (Go == null && string.IsNullOrEmpty(UIPath) == false)
             {
-                GameObject go = null;
+                GameObject go;
                 if (SyncLoadFunc != null)
                 {
                     var o = SyncLoadFunc(UIPath);
@@ -252,11 +252,11 @@
             UIRoot.Instance.StartCoroutine(AsyncShow(callback));
         }
 
-        IEnumerator AsyncShow(Action callback)
+        private IEnumerator AsyncShow(Action callback)
         {
             //1:Instance UI
             //FIX:support this is manager multi gameObject,instance by your self.
-            if (CacheGameObject == null && string.IsNullOrEmpty(UIPath) == false)
+            if (Go == null && string.IsNullOrEmpty(UIPath) == false)
             {
                 GameObject go = null;
                 var isLoading = true;
@@ -312,7 +312,7 @@
             }
         }
 
-        internal bool CheckIfNeedBack()
+        public bool CheckIfNeedBack()
         {
             if (Type == UIType.Fixed || Type == UIType.PopUp || Type == UIType.None)
             {
@@ -332,8 +332,8 @@
                 return;
             }
 
-            CacheGameObject = ui;
-            CacheTransform = ui.transform;
+            Go = ui;
+            Tr = ui.transform;
 
             //check if this is ugui or (ngui)?
             Vector3 anchorPos;
@@ -356,15 +356,15 @@
 
             if (Type == UIType.Fixed)
             {
-                CacheTransform.SetParent(UIRoot.Instance.FixedRoot);
+                Tr.SetParent(UIRoot.Instance.FixedRoot);
             }
             else if (Type == UIType.Normal)
             {
-                CacheTransform.SetParent(UIRoot.Instance.NormalRoot);
+                Tr.SetParent(UIRoot.Instance.NormalRoot);
             }
             else if (Type == UIType.PopUp)
             {
-                CacheTransform.SetParent(UIRoot.Instance.PopupRoot);
+                Tr.SetParent(UIRoot.Instance.PopupRoot);
             }
 
 
@@ -376,8 +376,8 @@
             }
             else
             {
-                CacheTransform.localPosition = anchorPos;
-                CacheTransform.localScale = scale;
+                Tr.localPosition = anchorPos;
+                Tr.localScale = scale;
             }
         }
 
@@ -393,7 +393,7 @@
             //so,should check isActived too.
             get
             {
-                var ret = CacheGameObject != null && CacheGameObject.activeSelf;
+                var ret = Go != null && Go.activeSelf;
                 return ret || IsActived;
             }
         }
@@ -405,8 +405,8 @@
         {
             AllPages.Remove(Name);
             CurrentPageNodes.Remove(this);
-            _data = null;
-            Object.Destroy(CacheGameObject);
+            Data = null;
+            Object.Destroy(Go);
         }
 
         #endregion
@@ -470,7 +470,7 @@
                 return;
             }
             var index = CurrentPageNodes.Count - 1;
-            UIPage topPage = CurrentPageNodes[index];
+            var topPage = CurrentPageNodes[index];
             if (topPage.Mode == UIMode.HideOther)
             {
                 //form bottm to top.
@@ -533,7 +533,7 @@
             //if (page.isActive() == false)
             {
                 //before show should set this data if need. maybe.!!
-                page._data = pageData;
+                page.Data = pageData;
                 if (isAsync)
                 {
                     page.Show(callback);
@@ -610,7 +610,7 @@
             }
 
             var index = CurrentPageNodes.Count - 1;
-            UIPage closePage = CurrentPageNodes[index];
+            var closePage = CurrentPageNodes[index];
             CurrentPageNodes.RemoveAt(index);
 
             //show older page.
@@ -618,7 +618,7 @@
             if (CurrentPageNodes.Count > 0)
             {
                 index = CurrentPageNodes.Count - 1;
-                UIPage page = CurrentPageNodes[index];
+                var page = CurrentPageNodes[index];
                 if (page._isAsyncUI)
                 {
                     ShowPage(page.Name, page, closePage.Hide);

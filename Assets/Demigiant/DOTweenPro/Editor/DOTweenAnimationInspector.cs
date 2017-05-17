@@ -59,6 +59,7 @@ namespace DG.DOTweenEditor
 
 #if DOTWEEN_TK2D
         static readonly Dictionary<DOTweenAnimationType, Type[]> _Tk2dAnimationTypeToComponent = new Dictionary<DOTweenAnimationType, Type[]>() {
+            { DOTweenAnimationType.Scale, new[] { typeof(tk2dBaseSprite), typeof(tk2dTextMesh) } },
             { DOTweenAnimationType.Color, new[] { typeof(tk2dBaseSprite), typeof(tk2dTextMesh) } },
             { DOTweenAnimationType.Fade, new[] { typeof(tk2dBaseSprite), typeof(tk2dTextMesh) } },
             { DOTweenAnimationType.Text, new[] { typeof(tk2dTextMesh) } }
@@ -508,7 +509,7 @@ namespace DG.DOTweenEditor
                 Transform prevT = _src.endValueTransform;
                 _src.endValueTransform = EditorGUILayout.ObjectField(_src.endValueTransform, typeof(Transform), true) as Transform;
                 if (_src.endValueTransform != prevT && _src.endValueTransform != null) {
-                    // Check that it's a Transform for a CacheTransform or a RectTransform for a RectTransform
+                    // Check that it's a Transform for a Transform or a RectTransform for a RectTransform
                     if (_src.GetComponent<RectTransform>() != null) {
                         if (_src.endValueTransform.GetComponent<RectTransform>() == null) {
                             EditorUtility.DisplayDialog("DOTween Pro", "For Unity UI elements, the target must also be a UI element", "Ok");

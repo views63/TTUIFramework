@@ -12,7 +12,7 @@ public class UITopBar : UIPage
 
     protected override void Awake()
     {
-        CacheTransform.Find("btn_back").GetComponent<Button>().onClick.AddListener(ClosePage);
-        CacheTransform.Find("btn_notice").GetComponent<Button>().onClick.AddListener(ShowPage<UINotice>);
+        Tr.Find("btn_back").GetComponent<Button>().onClick.AddListener(ClosePage);
+        Tr.Find("btn_notice").GetComponent<Button>().onClick.AddListener(ShowPage<UINotice>);
     }
 }

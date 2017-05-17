@@ -108,6 +108,10 @@ namespace Tiny.UI
             var eventObj = new GameObject("EventSystem");
             eventObj.layer = LayerMask.NameToLayer("UI");
             eventObj.transform.SetParent(go.transform);
+            eventObj.transform.localPosition = Vector3.zero;
+            eventObj.transform.localRotation=Quaternion.identity;
+            eventObj.transform.localScale = Vector3.one;
+
             eventObj.AddComponent<EventSystem>();
             var inputModule = eventObj.AddComponent<StandaloneInputModule>();
             inputModule.forceModuleActive = true;

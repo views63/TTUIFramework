@@ -5,7 +5,8 @@ using Tiny.UI;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class UISkillPage : UIPage {
+public class UISkillPage : UIPage
+{
 
     GameObject skillList = null;
     GameObject skillDesc = null;
@@ -20,11 +21,11 @@ public class UISkillPage : UIPage {
 
     protected override void Awake()
     {
-        skillList = this.CacheTransform.Find("list").gameObject;
-        skillDesc = this.CacheTransform.Find("desc").gameObject;
+        skillList = Tr.Find("list").gameObject;
+        skillDesc = Tr.Find("desc").gameObject;
         skillDesc.transform.Find("btn_upgrade").GetComponent<Button>().onClick.AddListener(OnClickUpgrade);
 
-        skillItem = this.CacheTransform.Find("list/Viewport/Content/item").gameObject;
+        skillItem = Tr.Find("list/Viewport/Content/item").gameObject;
         skillItem.SetActive(false);
     }
 
@@ -35,10 +36,10 @@ public class UISkillPage : UIPage {
 
         //Get Skill Data.
         //NOTE:here,maybe you havent Show(...pageData),ofcause you can got your skill data from your data singleton
-        UDSkill skillData = Data != null ? Data as UDSkill : GameData.Instance.playerSkill;
-        
+        UDSkill skillData = Data != null ? (UDSkill)Data : GameData.Instance.playerSkill;
+
         //create skill items in list.
-        for(int i=0;i< skillData.skills.Count; i++)
+        for (int i = 0; i < skillData.skills.Count; i++)
         {
             CreateSkillItem(skillData.skills[i]);
         }
@@ -54,7 +55,7 @@ public class UISkillPage : UIPage {
             Object.Destroy(skillItems[i].gameObject);
         }
         skillItems.Clear();
-        CacheGameObject.SetActive(false);
+        Go.SetActive(false);
         //Destroy();
     }
 
