@@ -5,7 +5,7 @@ using Tiny.UI;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class UISkillPage : UIPage
+public class UISkillPage : UIBase
 {
 
     GameObject skillList = null;
@@ -19,7 +19,7 @@ public class UISkillPage : UIPage
         UIPath = "UIPrefab/UISkill";
     }
 
-    protected override void Awake()
+    public override void Awake()
     {
         skillList = Tr.Find("list").gameObject;
         skillDesc = Tr.Find("desc").gameObject;

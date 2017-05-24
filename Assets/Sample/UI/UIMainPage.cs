@@ -3,7 +3,7 @@ using System.Collections;
 using Tiny.UI;
 using UnityEngine.UI;
 
-public class UIMainPage : UIPage
+public class UIMainPage : UIBase
 {
 
     public UIMainPage() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -11,9 +11,9 @@ public class UIMainPage : UIPage
         UIPath = "UIPrefab/UIMain";
     }
 
-    protected override void Awake()
+    public override void Awake()
     {
-        Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(ShowPage<UISkillPage>);
-        Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(ShowPage<UIBattle>);
+        Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(UIManager.ShowPage<UISkillPage>);
+        Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(UIManager.ShowPage<UIBattle>);
     }
 }

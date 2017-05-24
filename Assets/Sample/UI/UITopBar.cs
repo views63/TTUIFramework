@@ -1,18 +1,16 @@
-﻿using UnityEngine;
-using System.Collections;
-using Tiny.UI;
+﻿using Tiny.UI;
 using UnityEngine.UI;
 
-public class UITopBar : UIPage
+public class UITopBar : UIBase
 {
     public UITopBar() : base(UIType.Fixed, UIMode.DoNothing, UICollider.None)
     {
         UIPath = "UIPrefab/Topbar";
     }
 
-    protected override void Awake()
+    public override void Awake()
     {
-        Tr.Find("btn_back").GetComponent<Button>().onClick.AddListener(ClosePage);
-        Tr.Find("btn_notice").GetComponent<Button>().onClick.AddListener(ShowPage<UINotice>);
+        Tr.Find("btn_back").GetComponent<Button>().onClick.AddListener(UIManager.ClosePage);
+        Tr.Find("btn_notice").GetComponent<Button>().onClick.AddListener(UIManager.ShowPage<UINotice>);
     }
 }

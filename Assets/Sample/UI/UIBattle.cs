@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Tiny.UI;
 using UnityEngine.UI;
 
-public class UIBattle : UIPage
+public class UIBattle : UIBase
 {
 
     public UIBattle() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -12,7 +12,7 @@ public class UIBattle : UIPage
         UIPath = "UIPrefab/UIBattle";
     }
 
-    protected override void Awake()
+    public override void Awake()
     {
         Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(OnClickSkillGo);
         Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(OnClickGoBattle);
@@ -21,7 +21,7 @@ public class UIBattle : UIPage
     private void OnClickSkillGo()
     {
         //goto skill upgrade page.
-        ShowPage<UISkillPage>();
+        UIManager.ShowPage<UISkillPage>();
     }
 
     private void OnClickGoBattle()
