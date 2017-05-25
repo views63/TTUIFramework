@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using Tiny.UI;
+﻿using Tiny.UI;
 using UnityEngine.UI;
 
 public class UINotice : UIBase

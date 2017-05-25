@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using Tiny.UI;
-using UnityEngine.UI;
+﻿using Tiny.UI;
 
 public class UIMainPage : UIBase
 {
@@ -13,7 +10,7 @@ public class UIMainPage : UIBase
 
     public override void Awake()
     {
-        Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(UIManager.ShowPage<UISkillPage>);
-        Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(UIManager.ShowPage<UIBattle>);
+        Tr.AddListener("btn_skill", UIManager.ShowPage<UISkillPage>);
+        Tr.AddListener("btn_battle", UIManager.ShowPage<UIBattle>);
     }
 }

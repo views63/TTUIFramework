@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using Tiny.UI;
-using UnityEngine.UI;
 
 public class UIBattle : UIBase
 {
@@ -14,8 +11,8 @@ public class UIBattle : UIBase
 
     public override void Awake()
     {
-        Tr.Find("btn_skill").GetComponent<Button>().onClick.AddListener(OnClickSkillGo);
-        Tr.Find("btn_battle").GetComponent<Button>().onClick.AddListener(OnClickGoBattle);
+        Tr.AddListener("btn_skill", OnClickSkillGo);
+        Tr.AddListener("btn_battle", OnClickGoBattle);
     }
 
     private void OnClickSkillGo()

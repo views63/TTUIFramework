@@ -122,6 +122,7 @@ namespace Tiny.UI
                 }
 
                 AnchorUIGameObject(page, go);
+                InjectorView.AutoInject(page);
 
                 //after instance should awake init.
                 page.Awake();
@@ -160,6 +161,8 @@ namespace Tiny.UI
                 {
                     var go = o != null ? Object.Instantiate(o) as GameObject : null;
                     AnchorUIGameObject(page, go);
+                    InjectorView.AutoInject(page);
+
                     page.Awake();
                     page.IsAsyncUI = true;
                     isLoading = false;

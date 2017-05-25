@@ -1,0 +1,64 @@
+﻿#region
+
+using System;
+using System.Reflection;
+using Tiny.UI;
+using UnityEngine;
+
+#endregion
+
+public class InjectorView
+{
+    private static readonly Type TypeGameObject;
+    private static readonly Type TypeComponent;
+
+    static InjectorView()
+    {
+        TypeGameObject = typeof(GameObject);
+        TypeComponent = typeof(Component);
+    }
+
+    public static void AutoInject(UIBase view)
+    {
+        var tr = view.Tr;
+        var allViewFields = view.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+        AutoInject(view, allViewFields, tr);
+    }
+
+    public static void AutoInject(Block block)
+    {
+        var tr = block.Tr;
+        var allViewFields = block.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+        AutoInject(block, allViewFields, tr);
+    }
+
+    private static void AutoInject(object obj, FieldInfo[] allViewFields, Transform tr)
+    {
+        foreach (var viewfield in allViewFields)
+        {
+            var injections = viewfield.GetCustomAttributes(typeof(UIPath), true) as UIPath[];
+            if (injections != null && injections.Length > 0)
+            {
+                var uiPath = injections[0].Path;
+                var target = tr.Find(uiPath);
+                if (target == null)
+                {
+                    Debug.LogWarning("该特性标注的UI部件注入失败,请检查UI部件设置路径是否正确：" + uiPath);
+                    continue;
+                }
+
+                var fieldType = viewfield.FieldType;
+                var go = target.gameObject;
+                if (fieldType == TypeGameObject)
+                {
+                    viewfield.SetValue(obj, go);
+                }
+                else if (fieldType == TypeComponent || fieldType.IsSubclassOf(TypeComponent))
+                {
+                    viewfield.SetValue(obj, go.GetComponent(fieldType) ?? go.AddComponent(fieldType));
+                }
+            }
+        }
+    }
+}

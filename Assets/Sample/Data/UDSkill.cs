@@ -5,7 +5,8 @@ using System.Collections.Generic;
 /// <summary>
 /// Skill Test Data
 /// </summary>
-public class UDSkill  {
+public class UDSkill
+{
     public class Skill
     {
         public string name;

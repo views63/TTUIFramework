@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using Tiny.UI;
 using UnityEngine.UI;
@@ -7,11 +6,20 @@ using DG.Tweening;
 
 public class UISkillPage : UIBase
 {
+    [UIPath("list")]
+    GameObject skillList;
 
-    GameObject skillList = null;
-    GameObject skillDesc = null;
-    GameObject skillItem = null;
+    [UIPath("desc")]
+    GameObject skillDesc;
+
+    [UIPath("list/Viewport/Content/item")]
+    GameObject skillItem;
+
+    [UIPath("desc/content")]
+    Text content = null;
+
     List<UISkillItem> skillItems = new List<UISkillItem>();
+
     UISkillItem currentItem = null;
 
     public UISkillPage() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -21,11 +29,7 @@ public class UISkillPage : UIBase
 
     public override void Awake()
     {
-        skillList = Tr.Find("list").gameObject;
-        skillDesc = Tr.Find("desc").gameObject;
-        skillDesc.transform.Find("btn_upgrade").GetComponent<Button>().onClick.AddListener(OnClickUpgrade);
-
-        skillItem = Tr.Find("list/Viewport/Content/item").gameObject;
+        Tr.AddListener("desc/btn_upgrade", OnClickUpgrade);
         skillItem.SetActive(false);
     }
 
@@ -52,11 +56,11 @@ public class UISkillPage : UIBase
     {
         for (int i = 0; i < skillItems.Count; i++)
         {
-            Object.Destroy(skillItems[i].gameObject);
+            Object.Destroy(skillItems[i].Go);
+            skillItems[i] = null;
         }
         skillItems.Clear();
         Go.SetActive(false);
-        //Destroy();
     }
 
     #region this page logic
@@ -68,17 +72,16 @@ public class UISkillPage : UIBase
         go.transform.localScale = Vector3.one;
         go.SetActive(true);
 
-        UISkillItem item = go.AddComponent<UISkillItem>();
+        UISkillItem item = new UISkillItem(go.transform);
         item.Refresh(skill);
         skillItems.Add(item);
 
         //add click btn
-        go.AddComponent<Button>().onClick.AddListener(OnClickSkillItem);
+        go.AddComponent<Button>().onClick.AddListener(() => OnClickSkillItem(item));
     }
 
-    private void OnClickSkillItem()
+    private void OnClickSkillItem(UISkillItem item)
     {
-        UISkillItem item = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<UISkillItem>();
         ShowDesc(item);
     }
 
@@ -86,7 +89,8 @@ public class UISkillPage : UIBase
     {
         currentItem = skill;
         skillDesc.SetActive(true);
-        skillDesc.transform.localPosition = new Vector3(300f, skillDesc.transform.localPosition.y, skillDesc.transform.localPosition.z);
+        var pos = skillDesc.transform.localPosition;
+        skillDesc.transform.localPosition = new Vector3(300f, pos.y, pos.z);
         skillDesc.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-289.28f, -44.05f), 0.25f, true);
 
         RefreshDesc(skill);
@@ -94,7 +98,7 @@ public class UISkillPage : UIBase
 
     private void RefreshDesc(UISkillItem skill)
     {
-        skillDesc.transform.Find("content").GetComponent<Text>().text = skill.data.desc + "\n名称:" + skill.data.name + "\n等级:" + skill.data.level;
+        content.text = skill.data.desc + "\n名称:" + skill.data.name + "\n等级:" + skill.data.level;
     }
 
     private void OnClickUpgrade()

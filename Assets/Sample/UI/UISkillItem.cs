@@ -1,14 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-public class UISkillItem : MonoBehaviour {
+public class UISkillItem : Block
+{
 
     public UDSkill.Skill data = null;
+
+    [UIPath("title")]
+    private Text title;
+
+    public UISkillItem(Transform tr)
+    {
+        Init(this, tr);
+    }
 
     public void Refresh(UDSkill.Skill skill)
     {
         data = skill;
-        transform.Find("title").GetComponent<Text>().text = skill.name + "[lv." + skill.level + "]";
+        title.text = skill.name + "[lv." + skill.level + "]";
     }
 }

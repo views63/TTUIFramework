@@ -1,5 +1,4 @@
 ﻿using Tiny.UI;
-using UnityEngine.UI;
 
 public class UITopBar : UIBase
 {
@@ -10,7 +9,7 @@ public class UITopBar : UIBase
 
     public override void Awake()
     {
-        Tr.Find("btn_back").GetComponent<Button>().onClick.AddListener(UIManager.ClosePage);
-        Tr.Find("btn_notice").GetComponent<Button>().onClick.AddListener(UIManager.ShowPage<UINotice>);
+        Tr.AddListener("btn_back", UIManager.ClosePage);
+        Tr.AddListener("btn_notice", UIManager.ShowPage<UINotice>);
     }
 }

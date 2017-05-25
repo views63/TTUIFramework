@@ -24,7 +24,7 @@ namespace Tiny.UI
         public Transform NormalRoot { private set; get; }
         public Transform PopupRoot { private set; get; }
         public Transform Root { private set; get; }
-        public Camera UiCamera { private set; get; }
+        public Camera UICamera { private set; get; }
 
         public static UIRoot Instance
         {
@@ -58,7 +58,7 @@ namespace Tiny.UI
             uiCamera.orthographic = true;
             uiCamera.farClipPlane = 200f;
             canvas.worldCamera = uiCamera;
-            _instance.UiCamera = uiCamera;
+            _instance.UICamera = uiCamera;
             uiCamera.cullingMask = 1 << 5;
             uiCamera.nearClipPlane = -50f;
             uiCamera.farClipPlane = 50f;
