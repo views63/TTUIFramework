@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Object = UnityEngine.Object;
 
 namespace Tiny.UI
@@ -212,6 +213,13 @@ namespace Tiny.UI
         }
 
 
+        private static void InjectUIBaseData(UIBase page, GameObject go)
+        {
+            var type = page.GetType().BaseType;
+            type.GetField("_go", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(page, go);
+            type.GetField("_tr", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(page, go.transform);
+        }
+
 
         private static void AnchorUIGameObject(UIBase page, GameObject ui)
         {
@@ -220,8 +228,7 @@ namespace Tiny.UI
                 return;
             }
 
-            page.Go = ui;
-            page.Tr = ui.transform;
+            InjectUIBaseData(page, ui);
 
             //check if this is ugui or (ngui)?
             Vector3 anchorPos;
@@ -340,6 +347,7 @@ namespace Tiny.UI
             {
                 return;
             }
+
             var index = _currentPageNodes.Count - 1;
             var topPage = _currentPageNodes[index];
             if (topPage.Mode == UIMode.HideOther)
@@ -604,9 +612,6 @@ namespace Tiny.UI
             }
         }
 
-        
-
         #endregion
-
     }
 }

@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 
-public class Block
+namespace Tiny.UI
 {
-    public GameObject Go;
-    public Transform Tr;
-
-    protected void Init(Block block, Transform tr)
+    public class Block
     {
-        Tr = tr;
-        Go = tr.gameObject;
-        InjectorView.AutoInject(block);
+        public GameObject Go { private set; get; }
+        public Transform Tr { private set; get; }
+
+        protected void Init(Block block, Transform tr)
+        {
+            Tr = tr;
+            Go = tr.gameObject;
+            InjectorView.AutoInject(block);
+        }
     }
 }
-

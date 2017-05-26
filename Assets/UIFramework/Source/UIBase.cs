@@ -47,11 +47,15 @@ namespace Tiny.UI
         /// <summary>
         /// this ui's gameobject
         /// </summary>
-        public GameObject Go { set; get; }
+        public GameObject Go { get { return _go; } }
+        private GameObject _go;
+
         /// <summary>
         ///  this ui's transform
         /// </summary>
-        public Transform Tr { set; get; }
+        public Transform Tr { get { return _tr; } }
+        private Transform _tr;
+
 
         /// <summary>
         /// record this ui load mode.async or sync.

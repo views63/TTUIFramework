@@ -10,6 +10,6 @@ public class UINotice : UIBase
 
     public override void Awake()
     {
-        Tr.Find("content/btn_confim").GetComponent<Button>().onClick.AddListener(Hide);
+        Tr.AddListener("content/btn_confim", Hide);
     }
 }

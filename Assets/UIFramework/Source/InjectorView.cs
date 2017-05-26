@@ -44,7 +44,7 @@ public class InjectorView
                 var target = tr.Find(uiPath);
                 if (target == null)
                 {
-                    Debug.LogWarning("该特性标注的UI部件注入失败,请检查UI部件设置路径是否正确：" + uiPath);
+                    Debug.LogWarning("the UI component injection failed for this attribute. check the UI component is set correctly: " + uiPath);
                     continue;
                 }
 

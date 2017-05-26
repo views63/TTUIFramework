@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Tiny.UI;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UISkillItem : Block
