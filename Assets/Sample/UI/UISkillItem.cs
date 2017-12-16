@@ -1,4 +1,4 @@
-﻿using Tiny.UI;
+﻿using TinyUI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +18,6 @@ public class UISkillItem : Block
     public void Refresh(UDSkill.Skill skill)
     {
         data = skill;
-        title.text = skill.name + "[lv." + skill.level + "]";
+        title.text = string.Format("{0}[lv.{1}]", skill.name, skill.level);
     }
 }

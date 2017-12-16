@@ -1,4 +1,4 @@
-﻿using Tiny.UI;
+﻿using TinyUI;
 
 public class UIMainPage : UIBase
 {

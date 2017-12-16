@@ -3,3 +3,8 @@
 /.vs/
 *.csproj
 *.sln
+/.idea/
+/obj/
+/UnityPackageManager/
+*.DS_Store
+*.DotSettings

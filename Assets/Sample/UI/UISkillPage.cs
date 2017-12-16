@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Tiny.UI;
+using TinyUI;
 using UnityEngine.UI;
 using DG.Tweening;
 
 public class UISkillPage : UIBase
 {
-    [UIPath("list")]
+    [UIPath("list")] 
     GameObject skillList;
 
-    [UIPath("desc")]
+    [UIPath("desc")] 
     GameObject skillDesc;
 
-    [UIPath("list/Viewport/Content/item")]
+    [UIPath("list/Viewport/Content/item")] 
     GameObject skillItem;
+    
+    [UIPath("list/Viewport/Content")] 
+    Transform grid;
 
-    [UIPath("desc/content")]
-    Text content = null;
+    [UIPath("desc/content")] 
+    Text content;
 
-    List<UISkillItem> skillItems = new List<UISkillItem>();
 
     UISkillItem currentItem = null;
+    private UDSkill Data;
 
     public UISkillPage() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
     {
@@ -38,51 +41,44 @@ public class UISkillPage : UIBase
         //default desc deactive
         skillDesc.SetActive(false);
 
+
         //Get Skill Data.
         //NOTE:here,maybe you havent Show(...pageData),ofcause you can got your skill data from your data singleton
-        UDSkill skillData = Data != null ? (UDSkill)Data : GameData.Instance.playerSkill;
-
-        //create skill items in list.
-        for (int i = 0; i < skillData.skills.Count; i++)
+        if (Data == null)
         {
-            CreateSkillItem(skillData.skills[i]);
+            Data = GameData.Instance.playerSkill;
+            //create skill items in list.
+            for (int i = 0; i < Data.skills.Count; i++)
+            {
+                CreateSkillItem(Data.skills[i], grid);
+            }
         }
 
-        skillList.transform.localScale = Vector3.zero;
-        skillList.transform.DOScale(Vector3.one, 0.5f).Play();
+
+        grid.localPosition = Vector3.zero;
+        grid.localScale = Vector3.zero;
+        grid.DOScale(Vector3.one, 0.5f).Play();
     }
 
     public override void Hide()
     {
-        for (int i = 0; i < skillItems.Count; i++)
-        {
-            Object.Destroy(skillItems[i].Go);
-            skillItems[i] = null;
-        }
-        skillItems.Clear();
         Go.SetActive(false);
     }
 
     #region this page logic
 
-    private void CreateSkillItem(UDSkill.Skill skill)
+    private void CreateSkillItem(UDSkill.Skill skill, Transform parent)
     {
         var go = Object.Instantiate(skillItem);
-        go.transform.SetParent(skillItem.transform.parent);
+        go.transform.SetParent(parent);
         go.transform.localScale = Vector3.one;
         go.SetActive(true);
 
         UISkillItem item = new UISkillItem(go.transform);
         item.Refresh(skill);
-        skillItems.Add(item);
 
         //add click btn
-        go.AddComponent<Button>().onClick.AddListener(() => OnClickSkillItem(item));
-    }
-
-    private void OnClickSkillItem(UISkillItem item)
-    {
-        ShowDesc(item);
+        go.AddComponent<Button>().AddListener(() => ShowDesc(item));
     }
 
     private void ShowDesc(UISkillItem skill)
@@ -98,7 +94,7 @@ public class UISkillPage : UIBase
 
     private void RefreshDesc(UISkillItem skill)
     {
-        content.text = skill.data.desc + "\n名称:" + skill.data.name + "\n等级:" + skill.data.level;
+        content.text = string.Format("{0}\n名称:{1}\n等级:{2}", skill.data.desc, skill.data.name, skill.data.level);
     }
 
     private void OnClickUpgrade()
@@ -109,5 +105,4 @@ public class UISkillPage : UIBase
     }
 
     #endregion
-
 }

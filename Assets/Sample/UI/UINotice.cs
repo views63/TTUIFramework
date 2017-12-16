@@ -1,4 +1,4 @@
-﻿using Tiny.UI;
+﻿using TinyUI;
 using UnityEngine.UI;
 
 public class UINotice : UIBase

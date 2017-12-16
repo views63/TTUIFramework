@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Tiny.UI;
+using TinyUI;
 
 public class UIBattle : UIBase
 {
