@@ -62,10 +62,11 @@ namespace TinyUI
             uiCamera.cullingMask = 1 << 5;
             uiCamera.nearClipPlane = -50f;
             uiCamera.farClipPlane = 50f;
-
+            uiCamera.allowMSAA = false;
+            uiCamera.allowHDR = false;
+            
             //add audio listener
             camObj.AddComponent<AudioListener>();
-            camObj.AddComponent<GUILayer>();
 
             var cs = go.AddComponent<CanvasScaler>();
             cs.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;

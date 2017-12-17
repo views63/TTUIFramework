@@ -118,7 +118,7 @@ namespace TinyUI
                 //protected.
                 if (go == null)
                 {
-                    Debug.LogError("[UI] Cant sync load your ui prefab.");
+                    Debug.LogError("UI can't sync load your ui prefab.");
                     return;
                 }
 
@@ -368,23 +368,23 @@ namespace TinyUI
             _currentPageNodes.Clear();
         }
 
-        private static void ShowPage<T>(Action callback, object pageData, bool isAsync) where T : UIBase, new()
+        private static void ShowPage<T>(Action callback, bool isAsync) where T : UIBase, new()
         {
             var t = typeof(T);
             var pageName = t.ToString();
             UIBase page;
             if (_allPages != null && _allPages.TryGetValue(pageName, out page))
             {
-                ShowPage(pageName, page, callback, pageData, isAsync);
+                ShowPage(pageName, page, callback, isAsync);
             }
             else
             {
                 var instance = new T();
-                ShowPage(pageName, instance, callback, pageData, isAsync);
+                ShowPage(pageName, instance, callback, isAsync);
             }
         }
 
-        private static void ShowPage(string pageName, UIBase pageInstance, Action callback, object pageData, bool isAsync)
+        private static void ShowPage(string pageName, UIBase pageInstance, Action callback, bool isAsync)
         {
             if (string.IsNullOrEmpty(pageName) || pageInstance == null)
             {
@@ -424,52 +424,32 @@ namespace TinyUI
         /// </summary>
         public static void ShowPage<T>() where T : UIBase, new()
         {
-            ShowPage<T>(null, null, false);
-        }
-
-        /// <summary>
-        /// Sync Show Page With Page Data Input.
-        /// </summary>
-        public static void ShowPage<T>(object pageData) where T : UIBase, new()
-        {
-            ShowPage<T>(null, pageData, false);
+            ShowPage<T>(null, false);
         }
 
         public static void ShowPage(string pageName, UIBase pageInstance)
         {
-            ShowPage(pageName, pageInstance, null, null, false);
+            ShowPage(pageName, pageInstance, null, false);
         }
 
-        public static void ShowPage(string pageName, UIBase pageInstance, object pageData)
-        {
-            ShowPage(pageName, pageInstance, null, pageData, false);
-        }
 
         /// <summary>
         /// Async Show Page with Async loader bind in 'UIBind.Bind()'
         /// </summary>
         public static void ShowPage<T>(Action callback) where T : UIBase, new()
         {
-            ShowPage<T>(callback, null, true);
+            ShowPage<T>(callback, true);
         }
 
-        public static void ShowPage<T>(Action callback, object pageData) where T : UIBase, new()
-        {
-            ShowPage<T>(callback, pageData, true);
-        }
 
         /// <summary>
         /// Async Show Page with Async loader bind in 'UIBind.Bind()'
         /// </summary>
         public static void ShowPage(string pageName, UIBase pageInstance, Action callback)
         {
-            ShowPage(pageName, pageInstance, callback, null, true);
+            ShowPage(pageName, pageInstance, callback, true);
         }
 
-        public static void ShowPage(string pageName, UIBase pageInstance, Action callback, object pageData)
-        {
-            ShowPage(pageName, pageInstance, callback, pageData, true);
-        }
 
         /// <summary>
         /// close current page in the "top" node.
