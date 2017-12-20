@@ -41,6 +41,8 @@ namespace TinyUI
         private static void InitRoot()
         {
             var go = new GameObject("UIRoot");
+            DontDestroyOnLoad(go);
+            
             go.layer = LayerMask.NameToLayer("UI");
             _instance = go.AddComponent<UIRoot>();
             go.AddComponent<RectTransform>();
@@ -116,6 +118,7 @@ namespace TinyUI
             eventObj.AddComponent<EventSystem>();
             var inputModule = eventObj.AddComponent<StandaloneInputModule>();
             inputModule.forceModuleActive = true;
+            
         }
 
         private static GameObject CreateSubCanvasForRoot(Transform root, int sort)

@@ -3,12 +3,12 @@ using System.Collections;
 using UnityEngine.UI;
 using TinyUI;
 
-public class GameMain : MonoBehaviour
+public class GameStart : MonoBehaviour
 {
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         UIManager.ShowPage<UITopBar>();
         UIManager.ShowPage<UIMainPage>();
+        Destroy(gameObject);
     }
 }
