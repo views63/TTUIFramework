@@ -8,4 +8,4 @@
 /UnityPackageManager/
 *.DS_Store
 *.DotSettings
-Assets/Plugins/Editor/JetBrains
+/Assets/Plugins/Editor/JetBrains
