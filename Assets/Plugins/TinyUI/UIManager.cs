@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
 
 namespace TinyUI
@@ -15,14 +16,17 @@ namespace TinyUI
         /// 可推出界面(UIMainMenu,UIRank等)
         /// </summary>
         Normal,
+
         /// <summary>
         /// 可推出界面(UIMainMenu,UIRank等)
         /// </summary>
         Fixed,
+
         /// <summary>
         /// 模式窗口
         /// </summary>
         PopUp,
+
         /// <summary>
         /// 独立的窗口
         /// </summary>
@@ -32,37 +36,25 @@ namespace TinyUI
     public enum UIMode
     {
         DoNothing,
+
         /// <summary>
         /// 闭其他界面
         /// </summary>
         HideOther,
+
         /// <summary>
         /// 点击返回按钮关闭当前,不关闭其他界面(需要调整好层级关系)
         /// </summary>   
         NeedBack,
+
         /// <summary>
         ///  关闭TopBar,关闭其他界面,不加入backSequence队列
         /// </summary> 
         NoNeedBack,
     }
 
-    public enum UICollider
-    {
-        /// <summary>
-        /// 显示该界面不包含碰撞背景
-        /// </summary>
-        None,
-        /// <summary>
-        /// 碰撞透明背景
-        /// </summary>  
-        Normal,
-        /// <summary>
-        /// 碰撞非透明背景
-        /// </summary>
-        WithBg,
-    }
     #endregion
-    
+
     /// <summary>
     /// Each Page Mean one UI 'window'
     /// 3 steps:
@@ -73,8 +65,6 @@ namespace TinyUI
     /// </summary>
     public class UIManager
     {
-        private const float Timeout = 10.0f;
-
         /// <summary>
         /// all pages with the union type
         /// </summary>
@@ -86,7 +76,7 @@ namespace TinyUI
         private static readonly List<UIBase> CurrentPageNodes = new List<UIBase>();
 
 
-        private static IEnumerator LoadAndShow(string pageName, UIBase page, Action callback)
+        private static IEnumerator LoadAndShow(UIBase page, Action callback)
         {
             //1:Instance UI
             //FIX:support this is manager multi gameObject,instance by your self.
@@ -95,13 +85,9 @@ namespace TinyUI
                 yield break;
             }
 
-            yield return null;
+            yield return LoadViewAsset(page, InitPage);
             
-            var go = (GameObject)Object.Instantiate(Resources.Load(page.UIPath));
-            InitPage(page, go);
-
-            AllPages[pageName] = page;
-            
+            AllPages[page.Name] = page;
             if (callback != null)
             {
                 callback();
@@ -114,9 +100,6 @@ namespace TinyUI
             InjectorView.AutoInject(page);
 
             page.Awake();
-
-
-            //:animation active.
             page.Active();
 
             //:refresh ui component.
@@ -126,43 +109,44 @@ namespace TinyUI
             PopNode(page);
         }
 
+        private static IEnumerator LoadViewAsset(UIBase page, Action<UIBase, GameObject> callback)
+        {
+            var req = Resources.LoadAsync<GameObject>(page.UIPath);
+            yield return req;
+
+            var go = (GameObject) Object.Instantiate(req.asset);
+            callback(page, go);
+        }
+
 
         private static void InjectUIBaseData(UIBase page, GameObject go)
         {
             var type = page.GetType().BaseType;
-            type.GetField("_go", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(page, go);
-            type.GetField("_tr", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(page, go.transform);
+            Assert.IsNotNull(type);
+            var goInfo = type.GetField("_go", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNotNull(goInfo);
+            goInfo.SetValue(page, go);
+            var trInfo = type.GetField("_tr", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNotNull(trInfo);
+            trInfo.SetValue(page, go.transform);
         }
 
 
         private static void AnchorUIGameObject(UIBase page, GameObject ui)
         {
-            if (UIRoot.Instance == null || ui == null)
-            {
-                return;
-            }
-
+            Assert.IsNotNull(UIRoot.Instance);
+            Assert.IsNotNull(ui);
             InjectUIBaseData(page, ui);
 
             //check if this is ugui or (ngui)?
-            Vector3 anchorPos;
-            Vector3 scale;
-            var sizeDel = Vector2.zero;
             var rect = ui.GetComponent<RectTransform>();
-            if (rect != null)
-            {
-                anchorPos = rect.anchoredPosition;
-                sizeDel = rect.sizeDelta;
-                scale = rect.localScale;
-            }
-            else
-            {
-                anchorPos = ui.transform.localPosition;
-                scale = ui.transform.localScale;
-            }
+            Assert.IsNotNull(rect);
+
+            var anchorPos = rect.anchoredPosition;
+            var sizeDel = rect.sizeDelta;
+            var scale = rect.localScale;
 
             //Debug.Log("anchorPos:" + anchorPos + "|sizeDel:" + sizeDel);
-
             if (page.Type == UIType.Fixed)
             {
                 page.Tr.SetParent(UIRoot.Instance.FixedRoot);
@@ -176,21 +160,11 @@ namespace TinyUI
                 page.Tr.SetParent(UIRoot.Instance.PopupRoot);
             }
 
-            if (rect != null)
-            {
-                rect.anchoredPosition = anchorPos;
-                rect.sizeDelta = sizeDel;
-                rect.localScale = scale;
-            }
-            else
-            {
-                page.Tr.localPosition = anchorPos;
-                page.Tr.localScale = scale;
-            }
+            rect.anchoredPosition = anchorPos;
+            rect.sizeDelta = sizeDel;
+            rect.localScale = scale;
         }
 
-
-        #region static api
 
         private static bool CheckIfNeedBack(UIBase page)
         {
@@ -198,7 +172,6 @@ namespace TinyUI
             {
                 return false;
             }
-
             if (page.Type == UIType.Fixed || page.Type == UIType.PopUp || page.Type == UIType.None)
             {
                 return false;
@@ -217,7 +190,7 @@ namespace TinyUI
         {
             if (page == null)
             {
-                Debug.LogError("[UI] page popup is null.");
+                Debug.LogError("UI page popup is null.");
                 return;
             }
 
@@ -226,7 +199,6 @@ namespace TinyUI
             {
                 return;
             }
-
             var isFound = false;
             for (int i = 0; i < CurrentPageNodes.Count; i++)
             {
@@ -256,7 +228,7 @@ namespace TinyUI
             {
                 return;
             }
-
+            
             var index = CurrentPageNodes.Count - 1;
             var topPage = CurrentPageNodes[index];
             if (topPage.Mode == UIMode.HideOther)
@@ -277,7 +249,7 @@ namespace TinyUI
             CurrentPageNodes.Clear();
         }
 
-        private static void ShowPage(string pageName, UIBase pageInstance, Action callback, bool isLoad)
+        private static void ShowPage(UIBase pageInstance, Action callback, bool isLoad)
         {
             if (isLoad)
             {
@@ -285,21 +257,18 @@ namespace TinyUI
             }
             else
             {
-                UIRoot.Instance.StartCoroutine(LoadAndShow(pageName, pageInstance, callback));
+                UIRoot.Instance.StartCoroutine(LoadAndShow(pageInstance, callback));
             }
         }
 
         private static void Show(UIBase page, Action callback)
         {
-            //:animation active.
             page.Active();
-
             //:refresh ui component.
             page.Refresh();
 
             //:popup this node to top if need back.
             PopNode(page);
-
             if (callback != null)
             {
                 callback();
@@ -314,7 +283,6 @@ namespace TinyUI
             ShowPage<T>(null);
         }
 
-
         public static void ShowPage<T>(Action callback) where T : UIBase, new()
         {
             var t = typeof(T);
@@ -322,15 +290,14 @@ namespace TinyUI
             UIBase page;
             if (AllPages != null && AllPages.TryGetValue(pageName, out page))
             {
-                ShowPage(pageName, page, callback, isLoad: true);
+                ShowPage(page, callback, isLoad: true);
             }
             else
             {
                 page = new T();
-                ShowPage(pageName, page, callback, isLoad: false);
+                ShowPage(page, callback, isLoad: false);
             }
         }
-
 
         /// <summary>
         /// close current page in the "top" node.
@@ -338,12 +305,10 @@ namespace TinyUI
         public static void ClosePage()
         {
             //Debug.Log("Back&Close PageNodes Count:" + _currentPageNodes.Count);
-
             if (CurrentPageNodes == null || CurrentPageNodes.Count <= 1)
             {
                 return;
             }
-
             var index = CurrentPageNodes.Count - 1;
             var closePage = CurrentPageNodes[index];
             CurrentPageNodes.RemoveAt(index);
@@ -354,7 +319,7 @@ namespace TinyUI
             {
                 index = CurrentPageNodes.Count - 1;
                 var page = CurrentPageNodes[index];
-                ShowPage(page.Name, page, closePage.Hide, isLoad: true);
+                ShowPage(page, closePage.Hide, isLoad: true);
             }
         }
 
@@ -379,7 +344,6 @@ namespace TinyUI
                 }
                 return;
             }
-
             var index = CurrentPageNodes.Count - 1;
             if (CurrentPageNodes != null && CurrentPageNodes.Count >= 1 && CurrentPageNodes[index] == target)
             {
@@ -390,7 +354,7 @@ namespace TinyUI
                 {
                     index = CurrentPageNodes.Count - 1;
                     UIBase page = CurrentPageNodes[index];
-                    ShowPage(page.Name, page, target.Hide, isLoad: true);
+                    ShowPage(page, target.Hide, isLoad: true);
                 }
             }
             else if (CheckIfNeedBack(target))
@@ -449,7 +413,5 @@ namespace TinyUI
                 Debug.LogError(pageName + " haven't shown yet");
             }
         }
-
-        #endregion
     }
 }

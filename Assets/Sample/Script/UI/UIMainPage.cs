@@ -3,7 +3,7 @@
 public class UIMainPage : UIBase
 {
 
-    public UIMainPage() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
+    public UIMainPage() : base(UIType.Normal, UIMode.HideOther)
     {
         UIPath = "UIPrefab/UIMain";
     }

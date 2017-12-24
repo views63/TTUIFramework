@@ -25,7 +25,7 @@ public class UISkillPage : UIBase
     UISkillItem currentItem = null;
     private UDSkill Data;
 
-    public UISkillPage() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
+    public UISkillPage() : base(UIType.Normal, UIMode.HideOther)
     {
         UIPath = "UIPrefab/UISkill";
     }
@@ -48,9 +48,9 @@ public class UISkillPage : UIBase
         {
             Data = GameData.Instance.playerSkill;
             //create skill items in list.
-            for (int i = 0; i < Data.skills.Count; i++)
+            foreach (var skill in Data.skills)
             {
-                CreateSkillItem(Data.skills[i], grid);
+                CreateSkillItem(skill, grid);
             }
         }
 

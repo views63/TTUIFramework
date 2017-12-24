@@ -561,7 +561,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: CATLIB
+    1: CATLIB;UNITY_ASSERTIONS
   platformArchitecture:
     iOS: 2
   scriptingBackend:

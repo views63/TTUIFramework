@@ -2,7 +2,7 @@
 
 public class UITopBar : UIBase
 {
-    public UITopBar() : base(UIType.Fixed, UIMode.DoNothing, UICollider.None)
+    public UITopBar() : base(UIType.Fixed, UIMode.DoNothing)
     {
         UIPath = "UIPrefab/Topbar";
     }

@@ -2,11 +2,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
 
 namespace TinyUI
 {
-
     /// <summary>
     /// Each Page Mean one UI 'window'
     /// 3 steps:
@@ -20,11 +20,6 @@ namespace TinyUI
         public string Name { private set; get; }
 
         /// <summary>
-        /// this page's id
-        /// </summary>
-        public int ID = -1;
-
-        /// <summary>
         /// this page's type
         /// </summary>
         public UIType Type { private set; get; }
@@ -34,10 +29,6 @@ namespace TinyUI
         /// </summary>
         public UIMode Mode { private set; get; }
 
-        /// <summary>
-        /// the background collider mode
-        /// </summary>
-        public UICollider Collider { private set; get; }
 
         /// <summary>
         /// path to load ui
@@ -47,7 +38,10 @@ namespace TinyUI
         /// <summary>
         /// this ui's gameobject
         /// </summary>
-        public GameObject Go { get { return _go; } }
+        public GameObject Go
+        {
+            get { return _go; }
+        }
 #pragma warning disable 649
         private GameObject _go;
 #pragma warning restore 649
@@ -55,21 +49,18 @@ namespace TinyUI
         /// <summary>
         ///  this ui's transform
         /// </summary>
-        public Transform Tr { get { return _tr; } }
+        public Transform Tr
+        {
+            get { return _tr; }
+        }
 #pragma warning disable 649
         private Transform _tr;
 #pragma warning restore 649
 
-
-        /// <summary>
-        /// record this ui load mode.async or sync.
-        /// </summary>
-        public bool IsAsyncUI = false;
-
         /// <summary>
         /// this page active flag
         /// </summary>
-        protected bool IsActived { get; private set; }
+        private bool _isActived;
 
         #region abstract api
 
@@ -85,7 +76,9 @@ namespace TinyUI
         /// <summary>
         /// Show UI Refresh Eachtime.
         /// </summary>
-        public virtual void Refresh() { }
+        public virtual void Refresh()
+        {
+        }
 
         /// <summary>
         /// Active this UI
@@ -93,7 +86,7 @@ namespace TinyUI
         public virtual void Active()
         {
             Go.SetActive(true);
-            IsActived = true;
+            _isActived = true;
         }
 
         /// <summary>
@@ -102,7 +95,7 @@ namespace TinyUI
         public virtual void Hide()
         {
             Go.SetActive(false);
-            IsActived = false;
+            _isActived = false;
             //set this page's data null when hide.
         }
 
@@ -110,18 +103,17 @@ namespace TinyUI
 
         #region public api
 
-        protected UIBase(UIType type = UIType.Normal, UIMode mod = UIMode.DoNothing, UICollider col = UICollider.None)
+        protected UIBase(UIType type = UIType.Normal, UIMode mod = UIMode.DoNothing)
         {
             Type = type;
             Mode = mod;
-            Collider = col;
             Name = GetType().ToString();
         }
 
 
         public override string ToString()
         {
-            var str = string.Format(">Name:{0},ID:{1},Type:{2},ShowMode:{3},Collider:{4}", Name, ID, Type, Mode, Collider);
+            var str = string.Format("Name:{0}_Type:{1}_ShowMode:{2}", Name, Type, Mode);
             return str;
         }
 
@@ -131,8 +123,8 @@ namespace TinyUI
             //so,should check isActived too.
             get
             {
-                var ret = Go != null && Go.activeSelf;
-                return ret || IsActived;
+                Assert.IsNotNull(Go);
+                return Go.activeSelf || _isActived;
             }
         }
 

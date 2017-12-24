@@ -4,7 +4,7 @@ using TinyUI;
 public class UIBattle : UIBase
 {
 
-    public UIBattle() : base(UIType.Normal, UIMode.HideOther, UICollider.None)
+    public UIBattle() : base(UIType.Normal, UIMode.HideOther)
     {
         UIPath = "UIPrefab/UIBattle";
     }
