@@ -48,13 +48,17 @@ namespace TinyUI
         /// this ui's gameobject
         /// </summary>
         public GameObject Go { get { return _go; } }
+#pragma warning disable 649
         private GameObject _go;
+#pragma warning restore 649
 
         /// <summary>
         ///  this ui's transform
         /// </summary>
         public Transform Tr { get { return _tr; } }
+#pragma warning disable 649
         private Transform _tr;
+#pragma warning restore 649
 
 
         /// <summary>
