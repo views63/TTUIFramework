@@ -9,6 +9,7 @@
  * Document: http://catlib.io/
  */
 
+using Catlib.Runtime.ABSystem;
 using CatLib.Compress;
 using CatLib.Debugger;
 using CatLib.Encryption;
@@ -58,6 +59,7 @@ namespace CatLib
                     new NetworkProvider(), 
                     new SocketProvider(), 
                     new TickProvider(), 
+                    new ABSystemProvider(), 
                 };
             }
         }

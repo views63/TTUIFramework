@@ -6,7 +6,7 @@ public class UIBattle : UIBase
 
     public UIBattle() : base(UIType.Normal, UIMode.HideOther)
     {
-        UIPath = "UIPrefab/UIBattle";
+        UIPath = "Assets.Sample.UIPrefab.UIBattle.prefab";
     }
 
     public override void Awake()

@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Catlib.Runtime.ABSystem;
+using CatLib;
 using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
 
@@ -257,7 +259,20 @@ namespace TinyUI
             }
             else
             {
-                UIRoot.Instance.StartCoroutine(LoadAndShow(pageInstance, callback));
+                var manager = App.Make<IABSystem>();
+                manager.Load(pageInstance.UIPath, (a) =>
+                {
+                    GameObject go = a.Instantiate();
+                    
+                    InitPage(pageInstance,go);
+                    AllPages[pageInstance.Name] = pageInstance;
+                    if (callback != null)
+                    {
+                        callback();
+                    }
+              
+                });
+              //UIRoot.Instance.StartCoroutine(LoadAndShow(pageInstance, callback));
             }
         }
 

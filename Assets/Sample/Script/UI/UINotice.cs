@@ -5,7 +5,7 @@ public class UINotice : UIBase
 {
     public UINotice() : base(UIType.PopUp, UIMode.DoNothing)
     {
-        UIPath = "UIPrefab/Notice";
+        UIPath = "Assets.Sample.UIPrefab.Notice.prefab";
     }
 
     public override void Awake()

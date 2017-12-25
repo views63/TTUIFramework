@@ -4,7 +4,7 @@ public class UITopBar : UIBase
 {
     public UITopBar() : base(UIType.Fixed, UIMode.DoNothing)
     {
-        UIPath = "UIPrefab/Topbar";
+        UIPath = "Assets.Sample.UIPrefab.Topbar.prefab";
     }
 
     public override void Awake()

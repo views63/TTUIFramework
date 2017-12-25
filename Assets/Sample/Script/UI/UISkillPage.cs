@@ -27,7 +27,7 @@ public class UISkillPage : UIBase
 
     public UISkillPage() : base(UIType.Normal, UIMode.HideOther)
     {
-        UIPath = "UIPrefab/UISkill";
+        UIPath = "Assets.Sample.UIPrefab.UISkill.prefab";
     }
 
     public override void Awake()

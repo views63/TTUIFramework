@@ -5,7 +5,7 @@ public class UIMainPage : UIBase
 
     public UIMainPage() : base(UIType.Normal, UIMode.HideOther)
     {
-        UIPath = "UIPrefab/UIMain";
+        UIPath = "Assets.Sample.UIPrefab.UIMain.prefab";
     }
 
     public override void Awake()
